@@ -1,45 +1,95 @@
-# fumadocs-ui-template
+# Kolbo.AI Documentation
 
-This is a Next.js application generated with
-[Create Fumadocs](https://github.com/fuma-nama/fumadocs).
+Official documentation for [Kolbo.AI](https://kolbo.ai) - The all-in-one AI creative platform with 100+ AI models.
 
-Run development server:
+## 🚀 Quick Start
 
 ```bash
+# Install dependencies
+npm install
+
+# Start development server
 npm run dev
-# or
-pnpm dev
-# or
-yarn dev
+
+# Build for production
+npm run build
+
+# Start production server
+npm start
 ```
 
-Open http://localhost:3000 with your browser to see the result.
+Visit **http://localhost:3000** to view the documentation.
 
-## Explore
+## 📁 Project Structure
 
-In the project, you can see:
+```
+kolbo-docs/
+├── app/                    # Next.js app directory
+│   ├── layout.tsx         # Root layout with Kolbo.AI branding
+│   ├── docs/              # Documentation routes
+│   └── global.css         # Custom theme (dark mode, Kolbo.AI colors)
+├── content/docs/          # MDX documentation content
+│   ├── index.mdx          # Welcome page
+│   ├── getting-started/   # Getting started guides
+│   ├── features/          # Feature documentation
+│   ├── api/               # API reference
+│   └── guides/            # User guides
+├── lib/                   # Shared utilities
+│   └── layout.shared.tsx  # Navigation configuration
+└── public/                # Static assets (logos, images)
+```
 
-- `lib/source.ts`: Code for content source adapter, [`loader()`](https://fumadocs.dev/docs/headless/source-api) provides the interface to access your content.
-- `lib/layout.shared.tsx`: Shared options for layouts, optional but preferred to keep.
+## 🎨 Customization
 
-| Route                     | Description                                            |
-| ------------------------- | ------------------------------------------------------ |
-| `app/(home)`              | The route group for your landing page and other pages. |
-| `app/docs`                | The documentation layout and pages.                    |
-| `app/api/search/route.ts` | The Route Handler for search.                          |
+### Theme Colors
+Edit `app/global.css` to customize the dark theme colors.
 
-### Fumadocs MDX
+### Navigation
+Edit `lib/layout.shared.tsx` to modify navigation links.
 
-A `source.config.ts` config file has been included, you can customise different options like frontmatter schema.
+### Branding
+Edit `app/layout.tsx` to update metadata and SEO settings.
 
-Read the [Introduction](https://fumadocs.dev/docs/mdx) for further details.
+## 📝 Adding Content
 
-## Learn More
+Documentation content is written in **MDX** (Markdown + React components).
 
-To learn more about Next.js and Fumadocs, take a look at the following
-resources:
+Create new pages in `content/docs/`:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js
-  features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-- [Fumadocs](https://fumadocs.dev) - learn about Fumadocs
+```mdx
+---
+title: Your Page Title
+description: Page description for SEO
+---
+
+# Your Page Title
+
+Content goes here...
+```
+
+## 🛠 Tech Stack
+
+- **Framework**: [Fumadocs](https://fumadocs.dev) (Next.js 16 + React 19)
+- **Styling**: Tailwind CSS v4
+- **Content**: MDX
+- **Fonts**: Poppins (headings), Inter (body)
+- **Deployment**: Vercel (planned for docs.kolbo.ai)
+
+## ✨ Features
+
+- ✅ Dark mode by default (matches Kolbo.AI brand)
+- ✅ Built-in search (Ctrl/Cmd + K)
+- ✅ Mobile-responsive
+- ✅ Three-column layout (sidebar + content + TOC)
+- ✅ SEO optimized
+- ✅ Fast page loads (Next.js SSG)
+
+## 🔗 Links
+
+- **Main Site**: [kolbo.ai](https://kolbo.ai)
+- **App**: [app.kolbo.ai](https://app.kolbo.ai)
+- **Fumadocs Docs**: [fumadocs.dev](https://fumadocs.dev)
+
+## 📄 License
+
+Copyright © 2024 Kolbo.AI. All rights reserved.
