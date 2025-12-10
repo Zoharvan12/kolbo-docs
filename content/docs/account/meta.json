@@ -1,0 +1,6 @@
+{
+  "title": "Account",
+  "icon": "User",
+  "pages": ["user-settings", "subscription", "organization", "memories"],
+  "defaultOpen": false
+}

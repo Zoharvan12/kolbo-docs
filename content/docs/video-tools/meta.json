@@ -1,0 +1,6 @@
+{
+  "title": "Video Tools",
+  "icon": "Video",
+  "pages": ["text-to-video", "image-to-video", "video-to-video", "lipsync"],
+  "defaultOpen": true
+}

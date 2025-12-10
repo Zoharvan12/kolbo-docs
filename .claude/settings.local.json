@@ -7,7 +7,21 @@
       "Bash(git add:*)",
       "Bash(git commit:*)",
       "Bash(git push:*)",
-      "Read(//c/Users/Zohar/Pictures/Screenshots/**)"
+      "Read(//c/Users/Zohar/Pictures/Screenshots/**)",
+      "Read(//g/Projects/Kolbo.AI/github/kolbo-map/**)",
+      "Bash(for dir in content/docs/*/)",
+      "Bash(do echo \"=== $dir ===\")",
+      "Bash(ls:*)",
+      "Bash(done)",
+      "Bash(npm run dev:*)",
+      "Bash(find:*)",
+      "WebSearch",
+      "Bash(cat:*)",
+      "Bash(node:*)",
+      "Read(//g/Projects/Kolbo.AI/Graphics/Logo/**)",
+      "Bash(netstat:*)",
+      "Bash(findstr:*)",
+      "Bash(taskkill:*)"
     ],
     "deny": [],
     "ask": []
