@@ -3,7 +3,11 @@
     "allow": [
       "Bash(gh:*)",
       "Bash(git remote set-url:*)",
-      "Bash(git log:*)"
+      "Bash(git log:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git push:*)",
+      "Read(//c/Users/Zohar/Pictures/Screenshots/**)"
     ],
     "deny": [],
     "ask": []
