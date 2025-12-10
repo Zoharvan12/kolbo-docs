@@ -24,6 +24,9 @@ function CardWithIcon({
     [key: string]: unknown;
   }>;
 
+  // Use href as-is - Fumadocs Card component should handle it correctly
+  // The href should be an absolute path like /docs/getting-started
+
   // Get the icon component from lucide-react
   // Lucide icons use PascalCase (e.g., "Rocket", "Sparkles", "HelpCircle")
   let IconComponent: React.ComponentType<{ className?: string }> | null = null;
