@@ -21,7 +21,8 @@
       "Read(//g/Projects/Kolbo.AI/Graphics/Logo/**)",
       "Bash(netstat:*)",
       "Bash(findstr:*)",
-      "Bash(taskkill:*)"
+      "Bash(taskkill:*)",
+      "WebFetch(domain:fumadocs.dev)"
     ],
     "deny": [],
     "ask": []
