@@ -1,7 +1,9 @@
 {
-  "name": "example-next-mdx",
-  "version": "0.0.0",
+  "name": "kolbo-docs",
+  "version": "1.0.0",
   "private": true,
+  "description": "Official documentation for Kolbo.AI - The all-in-one AI creative platform",
+  "author": "Kolbo.AI",
   "scripts": {
     "build": "next build",
     "dev": "next dev",
@@ -13,7 +15,7 @@
     "fumadocs-mdx": "13.0.1",
     "fumadocs-ui": "16.0.3",
     "lucide-react": "^0.546.0",
-    "next": "16.0.0",
+    "next": "^16.0.8",
     "react": "^19.2.0",
     "react-dom": "^19.2.0"
   },

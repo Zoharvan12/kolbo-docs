@@ -1,3 +1,55 @@
 @import 'tailwindcss';
 @import 'fumadocs-ui/css/neutral.css';
 @import 'fumadocs-ui/css/preset.css';
+
+/* Kolbo.AI Custom Theme Colors */
+:root {
+  /* Dark mode colors matching Kolbo.AI brand */
+  --background: 0 0% 7%; /* #121212 dark background */
+  --foreground: 0 0% 98%;
+  
+  --primary: 215 100% 60%; /* Blue accent */
+  --primary-foreground: 0 0% 100%;
+  
+  --secondary: 215 30% 20%;
+  --secondary-foreground: 0 0% 100%;
+  
+  --accent: 215 60% 50%;
+  --accent-foreground: 0 0% 100%;
+  
+  --muted: 0 0% 15%;
+  --muted-foreground: 0 0% 70%;
+  
+  --card: 0 0% 10%;
+  --card-foreground: 0 0% 98%;
+  
+  --border: 0 0% 20%;
+  --input: 0 0% 20%;
+  --ring: 215 100% 60%;
+  
+  --radius: 0.5rem;
+}
+
+/* Use Poppins for headings */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-poppins), system-ui, sans-serif;
+}
+
+/* Custom scrollbar for dark theme */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: hsl(var(--background));
+}
+
+::-webkit-scrollbar-thumb {
+  background: hsl(var(--muted));
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: hsl(var(--muted-foreground));
+}
