@@ -22,7 +22,8 @@
       "Bash(netstat:*)",
       "Bash(findstr:*)",
       "Bash(taskkill:*)",
-      "WebFetch(domain:fumadocs.dev)"
+      "WebFetch(domain:fumadocs.dev)",
+      "Bash(npm install:*)"
     ],
     "deny": [],
     "ask": []
