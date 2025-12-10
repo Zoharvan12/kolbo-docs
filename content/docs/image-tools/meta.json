@@ -1,6 +1,5 @@
 {
   "title": "Image Tools",
   "icon": "Image",
-  "pages": ["text-to-image", "image-editing", "canvas", "training-lab"],
-  "defaultOpen": true
+  "pages": ["text-to-image", "image-editing", "canvas", "training-lab"]
 }

@@ -1,6 +1,5 @@
 {
   "title": "Help",
   "icon": "HelpCircle",
-  "pages": ["learning-center", "troubleshooting"],
-  "defaultOpen": false
+  "pages": ["learning-center", "troubleshooting"]
 }

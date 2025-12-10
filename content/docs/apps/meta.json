@@ -1,6 +1,5 @@
 {
   "title": "Apps",
   "icon": "Smartphone",
-  "pages": ["ai-board", "ai-docs", "video-editor"],
-  "defaultOpen": false
+  "pages": ["ai-board", "ai-docs", "video-editor"]
 }

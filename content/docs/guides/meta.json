@@ -1,6 +1,5 @@
 {
   "title": "Guides",
   "icon": "Map",
-  "pages": ["beginner", "intermediate", "advanced", "use-cases"],
-  "defaultOpen": false
+  "pages": ["beginner", "intermediate", "advanced", "use-cases"]
 }
