@@ -72,6 +72,20 @@ When complete:
 | Music | `POST /v1/generate/music` | 30s-2 min |
 | Speech | `POST /v1/generate/speech` | 5-30s |
 | Sound Effects | `POST /v1/generate/sound` | 5-30s |
+| Creative Director | `POST /v1/generate/creative-director` | 30s-3 min |
+
+## Visual DNA
+
+Create reusable visual identities for characters, products, or styles, then attach them to any generation for consistency.
+
+| Endpoint | Description |
+|----------|-------------|
+| `POST /v1/visual-dna` | Create a Visual DNA from reference images |
+| `GET /v1/visual-dna` | List your Visual DNAs |
+| `GET /v1/visual-dna/:id` | Get Visual DNA details |
+| `DELETE /v1/visual-dna/:id` | Delete a Visual DNA |
+
+See [Visual DNA](/docs/developer-api/visual-dna) for details.
 
 ## Other Endpoints
 
@@ -80,6 +94,7 @@ When complete:
 | `GET /v1/models` | List available models |
 | `GET /v1/account/credits` | Check credit balance |
 | `GET /v1/generate/:id/status` | Poll generation status |
+| `GET /v1/generate/creative-director/:id/status` | Poll Creative Director status (per-scene) |
 
 ## Authentication
 

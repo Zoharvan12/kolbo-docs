@@ -62,6 +62,7 @@ When polling status, the `state` field can be:
 
 | State | Description |
 |-------|-------------|
+| `pending` | Generation is queued (Creative Director only) |
 | `processing` | Generation is in progress |
 | `completed` | Generation finished, `result` field contains URLs |
 | `failed` | Generation failed, `error` field explains why |
@@ -80,5 +81,6 @@ When polling status, the `state` field can be:
 - Video: typically completes within 5 minutes
 - Music: typically completes within 2 minutes
 - Speech/Sound: typically completes within 30 seconds
+- Creative Director: typically completes within 3 minutes (depends on scene count)
 
 If polling beyond these times, the generation may have failed silently. Check the status one final time, then consider retrying.

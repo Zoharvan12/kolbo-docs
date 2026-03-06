@@ -1,0 +1,248 @@
+---
+title: Creative Director
+description: Generate multi-scene creative sets from a single prompt using the Kolbo API.
+---
+
+The Creative Director generates multiple coordinated scenes from a single prompt. Give it a concept and scene count, and it produces a complete creative set — ideal for product showcases, storyboards, ad campaigns, and more.
+
+## Generate
+
+### Endpoint
+
+```
+POST /api/v1/generate/creative-director
+```
+
+### Request Body
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `prompt` | string | Yes | Creative concept or brief |
+| `scene_count` | number | No | Number of scenes, 1-8 (default: `4`) |
+| `model` | string | No | Model identifier for all scenes (default: auto-select) |
+| `aspect_ratio` | string | No | `"1:1"`, `"16:9"`, `"9:16"`, etc. (default: `"1:1"`) |
+| `visual_dna_ids` | array | No | Visual DNA IDs for character/product consistency |
+
+### Example
+
+```bash
+curl -X POST https://api.kolbo.ai/api/v1/generate/creative-director \
+  -H "X-API-Key: kolbo_live_..." \
+  -H "Content-Type: application/json" \
+  -d '{
+    "prompt": "Product showcase for a premium red sneaker",
+    "scene_count": 4,
+    "aspect_ratio": "16:9"
+  }'
+```
+
+### Response
+
+```json
+{
+  "success": true,
+  "generation_id": "cd123",
+  "type": "creative_director",
+  "scene_count": 4,
+  "model": "smart_select",
+  "poll_url": "/api/v1/generate/creative-director/cd123/status",
+  "poll_interval_hint": 5
+}
+```
+
+## Poll Status
+
+Creative Director has a dedicated status endpoint that returns per-scene progress.
+
+### Endpoint
+
+```
+GET /api/v1/generate/creative-director/:id/status
+```
+
+### Example
+
+```bash
+curl https://api.kolbo.ai/api/v1/generate/creative-director/cd123/status \
+  -H "X-API-Key: kolbo_live_..."
+```
+
+### Response (In Progress)
+
+```json
+{
+  "success": true,
+  "generation_id": "cd123",
+  "type": "creative_director",
+  "state": "processing",
+  "progress": 50,
+  "scenes": [
+    {
+      "scene_number": 1,
+      "status": "completed",
+      "title": "Hero Shot",
+      "image_urls": ["https://cdn.kolbo.ai/images/..."]
+    },
+    {
+      "scene_number": 2,
+      "status": "completed",
+      "title": "Detail Close-up",
+      "image_urls": ["https://cdn.kolbo.ai/images/..."]
+    },
+    {
+      "scene_number": 3,
+      "status": "processing",
+      "title": "Lifestyle Context",
+      "progress": 60
+    },
+    {
+      "scene_number": 4,
+      "status": "pending",
+      "title": "Brand Statement"
+    }
+  ]
+}
+```
+
+### Response (Completed)
+
+```json
+{
+  "success": true,
+  "generation_id": "cd123",
+  "type": "creative_director",
+  "state": "completed",
+  "progress": 100,
+  "scenes": [
+    {
+      "scene_number": 1,
+      "status": "completed",
+      "title": "Hero Shot",
+      "image_urls": ["https://cdn.kolbo.ai/images/..."]
+    },
+    {
+      "scene_number": 2,
+      "status": "completed",
+      "title": "Detail Close-up",
+      "image_urls": ["https://cdn.kolbo.ai/images/..."]
+    },
+    {
+      "scene_number": 3,
+      "status": "completed",
+      "title": "Lifestyle Context",
+      "image_urls": ["https://cdn.kolbo.ai/images/..."]
+    },
+    {
+      "scene_number": 4,
+      "status": "completed",
+      "title": "Brand Statement",
+      "image_urls": ["https://cdn.kolbo.ai/images/..."]
+    }
+  ]
+}
+```
+
+## With Visual DNA
+
+Combine Creative Director with Visual DNA to generate consistent character or product scenes:
+
+```bash
+curl -X POST https://api.kolbo.ai/api/v1/generate/creative-director \
+  -H "X-API-Key: kolbo_live_..." \
+  -H "Content-Type: application/json" \
+  -d '{
+    "prompt": "Fashion lookbook for Emma in urban settings",
+    "scene_count": 6,
+    "visual_dna_ids": ["6601a1b2c3d4e5f6a7b8c9d0"],
+    "aspect_ratio": "9:16"
+  }'
+```
+
+## JavaScript Example
+
+```javascript
+const API_KEY = process.env.KOLBO_API_KEY;
+const BASE = 'https://api.kolbo.ai/api';
+
+// Start generation
+const res = await fetch(`${BASE}/v1/generate/creative-director`, {
+  method: 'POST',
+  headers: {
+    'X-API-Key': API_KEY,
+    'Content-Type': 'application/json'
+  },
+  body: JSON.stringify({
+    prompt: 'Product showcase for artisan coffee brand',
+    scene_count: 4,
+    aspect_ratio: '16:9'
+  })
+});
+
+const { generation_id, poll_url } = await res.json();
+
+// Poll for results
+let result;
+do {
+  await new Promise(r => setTimeout(r, 5000));
+  const status = await fetch(`${BASE}${poll_url}`, {
+    headers: { 'X-API-Key': API_KEY }
+  });
+  result = await status.json();
+  console.log(`Progress: ${result.progress}%`);
+} while (result.state === 'processing' || result.state === 'pending');
+
+// Collect all scene images
+const allImages = result.scenes
+  .filter(s => s.status === 'completed')
+  .flatMap(s => s.image_urls);
+
+console.log(`Generated ${allImages.length} images across ${result.scenes.length} scenes`);
+```
+
+## Python Example
+
+```python
+import requests
+import time
+
+API_KEY = "kolbo_live_..."
+BASE = "https://api.kolbo.ai/api"
+
+# Start generation
+r = requests.post(f"{BASE}/v1/generate/creative-director",
+    headers={"X-API-Key": API_KEY},
+    json={
+        "prompt": "Storyboard for a 30-second sneaker commercial",
+        "scene_count": 6,
+        "aspect_ratio": "16:9"
+    })
+gen = r.json()
+
+# Poll for results
+while True:
+    time.sleep(5)
+    s = requests.get(f"{BASE}{gen['poll_url']}",
+        headers={"X-API-Key": API_KEY}).json()
+
+    completed = sum(1 for sc in s["scenes"] if sc["status"] == "completed")
+    print(f"Progress: {s['progress']}% ({completed}/{len(s['scenes'])} scenes)")
+
+    if s["state"] not in ("processing", "pending"):
+        break
+
+# Print results
+for scene in s["scenes"]:
+    if scene["status"] == "completed":
+        print(f"Scene {scene['scene_number']}: {scene['title']}")
+        for url in scene["image_urls"]:
+            print(f"  {url}")
+```
+
+## Tips
+
+- Each scene is an independent image generation, so a 4-scene batch uses 4x the credits of a single image
+- The AI automatically creates scene titles and optimized prompts for each scene
+- Use `model` to force a specific model for all scenes, or omit it for smart auto-selection
+- Creative Director works well with Visual DNA for maintaining character consistency across scenes
+- Scenes generate in parallel where possible — a 4-scene batch typically takes 30-60 seconds
+- Use the per-scene status to show progressive results in your UI

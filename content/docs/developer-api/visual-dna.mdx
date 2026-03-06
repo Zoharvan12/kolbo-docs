@@ -1,0 +1,238 @@
+---
+title: Visual DNA
+description: Create and manage Visual DNA presets for character/product/style consistency across generations.
+---
+
+Visual DNA captures the visual identity of a character, product, style, or environment from reference images. Once created, you can attach Visual DNAs to image and video generations to maintain consistency across outputs.
+
+## Create Visual DNA
+
+Upload reference images and create a Visual DNA preset. The API analyzes your images and generates a reusable identity profile.
+
+### Endpoint
+
+```
+POST /api/v1/visual-dna
+```
+
+### Request Body (multipart/form-data)
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `name` | string | Yes | Name for this Visual DNA (max 100 chars) |
+| `dna_type` | string | No | `"character"`, `"product"`, `"style"`, or `"environment"` (default: `"character"`) |
+| `images` | file(s) | Yes | 1-4 reference images |
+| `prompt_helper` | string | No | Additional description to guide the analysis |
+
+### Example
+
+```bash
+curl -X POST https://api.kolbo.ai/api/v1/visual-dna \
+  -H "X-API-Key: kolbo_live_..." \
+  -F "name=Emma" \
+  -F "dna_type=character" \
+  -F "images=@photo1.jpg" \
+  -F "images=@photo2.jpg" \
+  -F "prompt_helper=Young woman with red hair"
+```
+
+### Response
+
+```json
+{
+  "success": true,
+  "visual_dna": {
+    "id": "6601a1b2c3d4e5f6a7b8c9d0",
+    "name": "Emma",
+    "dna_type": "character",
+    "description": "AI-generated visual analysis...",
+    "thumbnail_url": "https://cdn.kolbo.ai/visual-dna/...",
+    "images": ["https://cdn.kolbo.ai/..."],
+    "created_at": "2026-03-06T12:00:00Z"
+  }
+}
+```
+
+Visual DNA creation takes 10-30 seconds as the API analyzes your reference images.
+
+## List Visual DNAs
+
+### Endpoint
+
+```
+GET /api/v1/visual-dna
+```
+
+### Example
+
+```bash
+curl https://api.kolbo.ai/api/v1/visual-dna \
+  -H "X-API-Key: kolbo_live_..."
+```
+
+### Response
+
+```json
+{
+  "success": true,
+  "visual_dnas": [
+    {
+      "id": "6601a1b2c3d4e5f6a7b8c9d0",
+      "name": "Emma",
+      "dna_type": "character",
+      "thumbnail_url": "https://cdn.kolbo.ai/...",
+      "images": ["https://cdn.kolbo.ai/..."],
+      "is_global": false,
+      "created_at": "2026-03-06T12:00:00Z"
+    }
+  ],
+  "count": 1
+}
+```
+
+## Get Visual DNA
+
+### Endpoint
+
+```
+GET /api/v1/visual-dna/:id
+```
+
+### Example
+
+```bash
+curl https://api.kolbo.ai/api/v1/visual-dna/6601a1b2c3d4e5f6a7b8c9d0 \
+  -H "X-API-Key: kolbo_live_..."
+```
+
+### Response
+
+```json
+{
+  "success": true,
+  "visual_dna": {
+    "id": "6601a1b2c3d4e5f6a7b8c9d0",
+    "name": "Emma",
+    "dna_type": "character",
+    "description": "AI-generated visual analysis...",
+    "system_prompt": "Detailed system prompt for consistency...",
+    "thumbnail_url": "https://cdn.kolbo.ai/...",
+    "images": ["https://cdn.kolbo.ai/..."],
+    "is_global": false,
+    "created_at": "2026-03-06T12:00:00Z"
+  }
+}
+```
+
+## Delete Visual DNA
+
+### Endpoint
+
+```
+DELETE /api/v1/visual-dna/:id
+```
+
+### Example
+
+```bash
+curl -X DELETE https://api.kolbo.ai/api/v1/visual-dna/6601a1b2c3d4e5f6a7b8c9d0 \
+  -H "X-API-Key: kolbo_live_..."
+```
+
+### Response
+
+```json
+{
+  "success": true,
+  "message": "Visual DNA deleted successfully"
+}
+```
+
+Global (system) Visual DNAs cannot be deleted.
+
+## Using Visual DNA in Generations
+
+Pass `visual_dna_ids` when generating images or videos to maintain character/product consistency:
+
+### Image Generation
+
+```bash
+curl -X POST https://api.kolbo.ai/api/v1/generate/image \
+  -H "X-API-Key: kolbo_live_..." \
+  -H "Content-Type: application/json" \
+  -d '{
+    "prompt": "Emma standing in a coffee shop",
+    "visual_dna_ids": ["6601a1b2c3d4e5f6a7b8c9d0"],
+    "aspect_ratio": "1:1"
+  }'
+```
+
+### Video Generation
+
+```bash
+curl -X POST https://api.kolbo.ai/api/v1/generate/video \
+  -H "X-API-Key: kolbo_live_..." \
+  -H "Content-Type: application/json" \
+  -d '{
+    "prompt": "Emma walking through a park",
+    "visual_dna_ids": ["6601a1b2c3d4e5f6a7b8c9d0"],
+    "duration": 5
+  }'
+```
+
+You can pass up to 3 Visual DNA IDs per generation to combine multiple identities.
+
+## JavaScript Example
+
+```javascript
+const API_KEY = process.env.KOLBO_API_KEY;
+const BASE = 'https://api.kolbo.ai/api';
+
+// 1. Create a Visual DNA
+const form = new FormData();
+form.append('name', 'Brand Mascot');
+form.append('dna_type', 'character');
+form.append('images', fs.createReadStream('mascot1.jpg'));
+form.append('images', fs.createReadStream('mascot2.jpg'));
+
+const createRes = await fetch(`${BASE}/v1/visual-dna`, {
+  method: 'POST',
+  headers: { 'X-API-Key': API_KEY },
+  body: form
+});
+const { visual_dna } = await createRes.json();
+
+// 2. Generate an image with the Visual DNA
+const genRes = await fetch(`${BASE}/v1/generate/image`, {
+  method: 'POST',
+  headers: {
+    'X-API-Key': API_KEY,
+    'Content-Type': 'application/json'
+  },
+  body: JSON.stringify({
+    prompt: 'Brand mascot presenting a new product',
+    visual_dna_ids: [visual_dna.id]
+  })
+});
+const { poll_url } = await genRes.json();
+
+// 3. Poll for result
+let result;
+do {
+  await new Promise(r => setTimeout(r, 3000));
+  const status = await fetch(`${BASE}${poll_url}`, {
+    headers: { 'X-API-Key': API_KEY }
+  });
+  result = await status.json();
+} while (result.state === 'processing');
+
+console.log('Image URLs:', result.result.urls);
+```
+
+## Tips
+
+- Upload 2-4 diverse reference images for best results (different angles, lighting)
+- Character DNAs work best with clear face shots
+- Product DNAs work best with multiple angles of the same product
+- Visual DNA IDs work with both image and video generation endpoints
+- Global Visual DNAs (provided by Kolbo) appear in your list but cannot be deleted
