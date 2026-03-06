@@ -1,0 +1,98 @@
+---
+title: Models & Pricing
+description: Discover available AI models and their credit costs.
+---
+
+Kolbo provides 100+ AI models that are dynamically available. New models are added regularly and immediately accessible via the API.
+
+## List Models
+
+```
+GET /api/v1/models
+```
+
+### Query Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `type` | string | Filter by SDK type: `image`, `video`, `video_from_image`, `music`, `speech`, `sound`. Also accepts raw model types like `text_to_img`. |
+| `provider` | string | Filter by provider (e.g., `fal`, `kie`, `suno`, `elevenlabs`) |
+
+### Example
+
+```bash
+# All image models
+curl "https://api.kolbo.ai/api/v1/models?type=image" \
+  -H "X-API-Key: kolbo_live_..."
+
+# All video models from a specific provider
+curl "https://api.kolbo.ai/api/v1/models?type=video&provider=fal" \
+  -H "X-API-Key: kolbo_live_..."
+```
+
+### Response
+
+```json
+{
+  "success": true,
+  "models": [
+    {
+      "identifier": "fal-ai/flux/schnell",
+      "name": "Flux Schnell",
+      "provider": "fal",
+      "types": ["text_to_img"],
+      "credit": 2,
+      "supported_aspect_ratios": ["1:1", "16:9", "9:16", "4:3", "3:4"],
+      "supported_durations": null,
+      "max_reference_images": 8,
+      "recommended": true,
+      "new_model": false,
+      "avatar": "https://..."
+    }
+  ],
+  "count": 42
+}
+```
+
+## Model Fields
+
+| Field | Description |
+|-------|-------------|
+| `identifier` | Use this as the `model` parameter in generate requests |
+| `credit` | Credits per generation (image/music/sound) or per second (video) |
+| `supported_aspect_ratios` | Valid aspect ratios for this model |
+| `supported_durations` | Valid durations in seconds (video models) |
+| `max_reference_images` | Max reference images supported (image models) |
+| `recommended` | Kolbo-recommended model |
+| `new_model` | Recently added model |
+
+## Credit Costs
+
+Credits are the universal currency for all generations. 1 credit = $0.01.
+
+### Pricing by Type
+
+| Type | Pricing Model |
+|------|--------------|
+| Image | Flat rate per generation (typically 2-10 credits) |
+| Video | Per-second: `model.credit x duration_seconds` |
+| Music | Flat rate per generation |
+| Speech | Per 100 characters: `ceil(chars / 100) x model.credit` |
+| Sound | Flat rate per generation |
+
+### Example Costs
+
+| Generation | Credits |
+|------------|---------|
+| Flux Schnell image | ~2 |
+| 5s Seedance video | ~25 |
+| 10s Kling video | ~50 |
+| Suno music track | ~10 |
+| 500-char speech | ~5 |
+| Sound effect | ~3 |
+
+*Exact costs vary by model. Check the `credit` field on each model.*
+
+## Auto-Selection
+
+If you omit the `model` parameter, Kolbo's Smart Select automatically chooses the best model for your prompt. This is recommended for most use cases.

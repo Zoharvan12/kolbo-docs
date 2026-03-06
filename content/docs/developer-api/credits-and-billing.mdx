@@ -1,0 +1,69 @@
+---
+title: Credits & Billing
+description: Check your credit balance and understand how credits work.
+---
+
+All generations consume credits from your account. Credits come from your subscription plan, credit packs, and redemptions.
+
+## Check Balance
+
+```
+GET /api/v1/account/credits
+```
+
+### Example
+
+```bash
+curl https://api.kolbo.ai/api/v1/account/credits \
+  -H "X-API-Key: kolbo_live_..."
+```
+
+### Response
+
+```json
+{
+  "success": true,
+  "credits": {
+    "total": 1500,
+    "plan_credits": 1000,
+    "credit_pack": 400,
+    "redemption": 100
+  }
+}
+```
+
+## Credit Types
+
+| Type | Source | Behavior |
+|------|--------|----------|
+| `plan_credits` | Monthly subscription | Reset each billing cycle |
+| `credit_pack` | One-time purchases | Never expire |
+| `redemption` | Gift codes, promotions | Never expire |
+
+## Credit Deduction
+
+Credits are deducted when a generation starts. If a generation fails, credits are automatically refunded.
+
+### Deduction Order
+
+1. Plan credits (used first)
+2. Credit pack credits
+3. Redemption credits
+
+## Insufficient Credits
+
+If you don't have enough credits, the generation endpoint returns:
+
+```json
+{
+  "success": false,
+  "error": "Insufficient credits",
+  "code": "INSUFFICIENT_CREDITS"
+}
+```
+
+## Getting More Credits
+
+- Upgrade your plan at [kolbo.ai/pricing](https://kolbo.ai/pricing)
+- Purchase credit packs from your dashboard
+- Use promo code `KOLBO30` for 30% off

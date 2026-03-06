@@ -1,0 +1,97 @@
+---
+title: Music Generation
+description: Generate music from text descriptions using the Kolbo API.
+---
+
+Generate music tracks with vocals or instrumentals using AI models like Suno.
+
+## Endpoint
+
+```
+POST /api/v1/generate/music
+```
+
+## Request Body
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `prompt` | string | Yes | Description of the music (e.g., "upbeat pop song about summer") |
+| `model` | string | No | Model identifier (default: `"chirp-v4"`) |
+| `style` | string | No | Music style (e.g., `"pop"`, `"rock"`, `"electronic"`, `"jazz"`) |
+| `instrumental` | boolean | No | Instrumental only, no vocals (default: `false`) |
+| `lyrics` | string | No | Custom lyrics for the song |
+| `vocal_gender` | string | No | `"m"` or `"f"` for vocal gender preference |
+| `enhance_prompt` | boolean | No | Enhance the prompt (default: `true`) |
+
+## Examples
+
+### Simple
+
+```bash
+curl -X POST https://api.kolbo.ai/api/v1/generate/music \
+  -H "X-API-Key: kolbo_live_..." \
+  -H "Content-Type: application/json" \
+  -d '{"prompt": "Relaxing lo-fi hip hop beat for studying"}'
+```
+
+### With Style and Lyrics
+
+```bash
+curl -X POST https://api.kolbo.ai/api/v1/generate/music \
+  -H "X-API-Key: kolbo_live_..." \
+  -H "Content-Type: application/json" \
+  -d '{
+    "prompt": "Emotional ballad",
+    "style": "pop",
+    "lyrics": "Walking through the rain\nThinking of you again",
+    "vocal_gender": "f"
+  }'
+```
+
+### Instrumental
+
+```bash
+curl -X POST https://api.kolbo.ai/api/v1/generate/music \
+  -H "X-API-Key: kolbo_live_..." \
+  -H "Content-Type: application/json" \
+  -d '{
+    "prompt": "Epic orchestral trailer music",
+    "instrumental": true,
+    "style": "cinematic"
+  }'
+```
+
+## Response
+
+```json
+{
+  "success": true,
+  "generation_id": "mus123",
+  "type": "music",
+  "poll_url": "/api/v1/generate/mus123/status",
+  "poll_interval_hint": 8
+}
+```
+
+### Completed Status
+
+```json
+{
+  "success": true,
+  "generation_id": "mus123",
+  "state": "completed",
+  "progress": 100,
+  "result": {
+    "urls": ["https://cdn.kolbo.ai/audio/..."],
+    "title": "Summer Vibes",
+    "duration": 120,
+    "lyrics": "Generated or provided lyrics..."
+  }
+}
+```
+
+## Tips
+
+- Music generation typically takes 30 seconds to 2 minutes
+- Suno generates two track variations per request
+- Use descriptive prompts for better results: include genre, mood, tempo, and instruments

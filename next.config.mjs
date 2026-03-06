@@ -9,6 +9,10 @@ const config = {
   images: {
     unoptimized: true,
   },
+  // Enable faster page transitions
+  experimental: {
+    optimizePackageImports: ['fumadocs-ui', 'lucide-react'],
+  },
 };
 
 export default withMDX(config);

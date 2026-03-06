@@ -1,4 +1,12 @@
 {
   "title": "Chat Tools",
-  "icon": "MessageSquare"
+  "icon": "MessageSquare",
+  "pages": [
+    "chat-models",
+    "custom-agents",
+    "file-upload-analysis",
+    "user-memories",
+    "artifacts",
+    "sessions-organization"
+  ]
 }

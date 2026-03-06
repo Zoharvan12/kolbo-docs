@@ -1,5 +1,12 @@
 {
   "title": "Image Tools",
   "icon": "Image",
-  "pages": ["text-to-image", "image-editing", "canvas", "training-lab"]
+  "pages": [
+    "text-to-image",
+    "angels",
+    "training-lab",
+    "canvas",
+    "custom-models",
+    "image-editing"
+  ]
 }

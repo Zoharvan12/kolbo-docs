@@ -1,0 +1,96 @@
+---
+title: Developer API Overview
+description: Programmatically generate images, videos, music, speech, and sound effects with the Kolbo API.
+---
+
+The Kolbo Developer API lets you programmatically access 100+ AI models for generating images, videos, music, speech, and sound effects. Use it from any language, or integrate directly into Claude Code via our MCP server.
+
+## Quick Start
+
+### 1. Get an API Key
+
+Create a key from your [dashboard](https://app.kolbo.ai/settings/api-keys) or via the API:
+
+```bash
+curl -X POST https://api.kolbo.ai/api/api-keys \
+  -H "Authorization: Bearer YOUR_JWT_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{"name": "My App"}'
+```
+
+Save the `fullKey` from the response — it's only shown once.
+
+### 2. Generate an Image
+
+```bash
+curl -X POST https://api.kolbo.ai/api/v1/generate/image \
+  -H "X-API-Key: kolbo_live_..." \
+  -H "Content-Type: application/json" \
+  -d '{"prompt": "A sunset over mountains", "aspect_ratio": "16:9"}'
+```
+
+Response:
+```json
+{
+  "success": true,
+  "generation_id": "abc123",
+  "type": "image",
+  "poll_url": "/api/v1/generate/abc123/status",
+  "poll_interval_hint": 3
+}
+```
+
+### 3. Poll for Results
+
+```bash
+curl https://api.kolbo.ai/api/v1/generate/abc123/status \
+  -H "X-API-Key: kolbo_live_..."
+```
+
+When complete:
+```json
+{
+  "success": true,
+  "generation_id": "abc123",
+  "state": "completed",
+  "progress": 100,
+  "result": {
+    "urls": ["https://cdn.kolbo.ai/..."],
+    "model": "fal-ai/flux/schnell",
+    "prompt_used": "A breathtaking sunset..."
+  }
+}
+```
+
+## Generation Types
+
+| Type | Endpoint | Typical Time |
+|------|----------|-------------|
+| Image | `POST /v1/generate/image` | 10-30s |
+| Video (text) | `POST /v1/generate/video` | 1-5 min |
+| Video (from image) | `POST /v1/generate/video/from-image` | 1-5 min |
+| Music | `POST /v1/generate/music` | 30s-2 min |
+| Speech | `POST /v1/generate/speech` | 5-30s |
+| Sound Effects | `POST /v1/generate/sound` | 5-30s |
+
+## Other Endpoints
+
+| Endpoint | Description |
+|----------|-------------|
+| `GET /v1/models` | List available models |
+| `GET /v1/account/credits` | Check credit balance |
+| `GET /v1/generate/:id/status` | Poll generation status |
+
+## Authentication
+
+All requests require the `X-API-Key` header with your API key:
+
+```
+X-API-Key: kolbo_live_...
+```
+
+See [Authentication](/docs/developer-api/authentication) for details on creating and managing keys.
+
+## Claude Code Integration
+
+Use Kolbo as native tools in Claude Code via our MCP server. See [Claude Code Setup](/docs/developer-api/claude-code-skill).

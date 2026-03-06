@@ -1,0 +1,123 @@
+---
+title: Claude Code & MCP Setup
+description: Use Kolbo AI as native tools in Claude Code via the MCP server.
+---
+
+Use Kolbo AI directly from Claude Code or Claude Desktop as native tools. The MCP (Model Context Protocol) server handles polling internally — you call `generate_image` and get back the final URL.
+
+## Setup
+
+### 1. Get an API Key
+
+Create a key at [app.kolbo.ai](https://app.kolbo.ai/settings/api-keys) or via the [Authentication API](/docs/developer-api/authentication).
+
+### 2. Configure MCP Server
+
+Add to your Claude Code project settings (`.claude/settings.json`):
+
+```json
+{
+  "mcpServers": {
+    "kolbo": {
+      "command": "npx",
+      "args": ["-y", "@kolbo/mcp"],
+      "env": {
+        "KOLBO_API_KEY": "kolbo_live_..."
+      }
+    }
+  }
+}
+```
+
+Or for Claude Desktop (`claude_desktop_config.json`):
+
+```json
+{
+  "mcpServers": {
+    "kolbo": {
+      "command": "npx",
+      "args": ["-y", "@kolbo/mcp"],
+      "env": {
+        "KOLBO_API_KEY": "kolbo_live_..."
+      }
+    }
+  }
+}
+```
+
+### Environment Variables
+
+| Variable | Required | Description |
+|----------|----------|-------------|
+| `KOLBO_API_KEY` | Yes | Your Kolbo API key |
+| `KOLBO_API_URL` | No | Custom API URL (default: `https://api.kolbo.ai/api`) |
+
+## Available Tools
+
+Once configured, these tools are available in Claude Code:
+
+| Tool | Description |
+|------|-------------|
+| `generate_image` | Generate images from text prompts |
+| `generate_video` | Generate videos from text |
+| `generate_video_from_image` | Animate an image into video |
+| `generate_music` | Generate music from descriptions |
+| `generate_speech` | Convert text to speech |
+| `generate_sound` | Generate sound effects |
+| `list_models` | Browse available AI models |
+| `check_credits` | Check credit balance |
+| `get_generation_status` | Check a generation's status |
+
+## Usage Examples
+
+In Claude Code, just ask naturally:
+
+- "Generate an image of a sunset over mountains"
+- "Create a 5-second video of waves crashing on a beach"
+- "Make a lo-fi hip hop beat"
+- "Convert this text to speech: Hello world"
+- "List available video models"
+- "Check my credit balance"
+
+## Skill File (Optional)
+
+For better workflow guidance, add this as `.claude/commands/kolbo.md` in your project:
+
+````markdown
+# Kolbo AI Creative Generation
+
+You have access to the Kolbo AI platform via MCP tools for generating images, videos, music, speech, and sound effects.
+
+## Available Tools
+- `generate_image` — Create images from text prompts. Returns image URL(s).
+- `generate_video` — Create videos from text. Returns video URL.
+- `generate_video_from_image` — Animate an image into video. Returns video URL.
+- `generate_music` — Create music from descriptions. Returns audio URL.
+- `generate_speech` — Convert text to speech. Returns audio URL.
+- `generate_sound` — Create sound effects. Returns audio URL.
+- `list_models` — Browse available AI models by type.
+- `check_credits` — Check remaining credit balance.
+
+## Recommended Workflow
+1. Check credits with `check_credits` before generating
+2. Use `list_models` with a type filter to find the best model
+3. Generate content with the appropriate tool
+4. The tool handles polling — it returns the final URL when ready
+
+## Tips
+- Use `enhance_prompt: true` (default) for better image results
+- For video, check `supported_durations` and `supported_aspect_ratios` on the model
+- Music supports `style`, `instrumental`, and `lyrics` parameters
+- Image generation is fastest (~10-30s), video is slowest (~1-5 min)
+````
+
+## Troubleshooting
+
+### "KOLBO_API_KEY environment variable is required"
+Make sure `KOLBO_API_KEY` is set in the `env` section of your MCP server config.
+
+### Tool not appearing
+Restart Claude Code after adding the MCP server config. Check that `npx @kolbo/mcp` runs without errors.
+
+### Generation timeout
+Video generations can take up to 5 minutes. The MCP server will keep polling. If it times out, use `get_generation_status` with the generation ID.

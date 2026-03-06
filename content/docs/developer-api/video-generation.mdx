@@ -1,0 +1,109 @@
+---
+title: Video Generation
+description: Generate videos from text prompts or animate images using the Kolbo API.
+---
+
+Generate videos from text or animate images using models like Kling, Seedance, Hailuo, Sora, and more.
+
+## Text to Video
+
+### Endpoint
+
+```
+POST /api/v1/generate/video
+```
+
+### Request Body
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `prompt` | string | Yes | Text description of the video |
+| `model` | string | No | Model identifier (default: auto-select) |
+| `aspect_ratio` | string | No | `"16:9"`, `"9:16"`, `"1:1"` (default: `"16:9"`) |
+| `duration` | number | No | Duration in seconds, e.g. `5` or `10` (default: `5`) |
+| `enhance_prompt` | boolean | No | Enhance prompt (default: `true`) |
+
+### Example
+
+```bash
+curl -X POST https://api.kolbo.ai/api/v1/generate/video \
+  -H "X-API-Key: kolbo_live_..." \
+  -H "Content-Type: application/json" \
+  -d '{
+    "prompt": "A drone flying over a snowy mountain range",
+    "duration": 5,
+    "aspect_ratio": "16:9"
+  }'
+```
+
+## Image to Video
+
+Animate a still image into a video.
+
+### Endpoint
+
+```
+POST /api/v1/generate/video/from-image
+```
+
+### Request Body
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `image_url` | string | Yes | URL of the source image |
+| `prompt` | string | No | Motion/animation description |
+| `model` | string | No | Model identifier (default: auto-select) |
+| `duration` | number | No | Duration in seconds (default: `5`) |
+| `enhance_prompt` | boolean | No | Enhance prompt (default: `true`) |
+
+### Example
+
+```bash
+curl -X POST https://api.kolbo.ai/api/v1/generate/video/from-image \
+  -H "X-API-Key: kolbo_live_..." \
+  -H "Content-Type: application/json" \
+  -d '{
+    "image_url": "https://example.com/photo.jpg",
+    "prompt": "Slow zoom in with gentle camera pan",
+    "duration": 5
+  }'
+```
+
+## Response
+
+Both endpoints return the same format:
+
+```json
+{
+  "success": true,
+  "generation_id": "vid123",
+  "type": "video",
+  "poll_url": "/api/v1/generate/vid123/status",
+  "poll_interval_hint": 8
+}
+```
+
+### Completed Status
+
+```json
+{
+  "success": true,
+  "generation_id": "vid123",
+  "state": "completed",
+  "progress": 100,
+  "result": {
+    "urls": ["https://cdn.kolbo.ai/videos/..."],
+    "thumbnail_url": "https://cdn.kolbo.ai/thumbs/...",
+    "duration": 5,
+    "aspect_ratio": "16:9",
+    "model": "seedance-1.0"
+  }
+}
+```
+
+## Tips
+
+- Video generation takes 1-5 minutes depending on the model and duration
+- Check `supported_durations` on each model via the [Models endpoint](/docs/developer-api/models-and-pricing)
+- Credits are charged per second: `model.credit x duration`
+- Use `poll_interval_hint` from the initial response to set your polling interval

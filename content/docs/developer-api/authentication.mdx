@@ -1,0 +1,92 @@
+---
+title: Authentication
+description: Create and manage API keys for the Kolbo Developer API.
+---
+
+All API requests require an API key passed via the `X-API-Key` header.
+
+## API Key Format
+
+Keys follow the format: `kolbo_live_<40 hex characters>`
+
+## Creating a Key
+
+### Via API
+
+```bash
+curl -X POST https://api.kolbo.ai/api/api-keys \
+  -H "Authorization: Bearer YOUR_JWT_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "My Integration",
+    "permissions": ["read", "write"],
+    "expiresInDays": 365
+  }'
+```
+
+Response:
+```json
+{
+  "status": true,
+  "data": {
+    "id": "key_id",
+    "keyPrefix": "kolbo_live_abcdef...",
+    "name": "My Integration",
+    "permissions": ["read", "write"],
+    "createdAt": "2026-03-05T10:00:00Z",
+    "expiresAt": "2027-03-05T10:00:00Z"
+  },
+  "fullKey": "kolbo_live_abc123def456...",
+  "message": "API key created. Save the full key — it will not be shown again."
+}
+```
+
+<Callout type="warn">
+Save the `fullKey` immediately — it is only returned once at creation time.
+</Callout>
+
+## Using the Key
+
+Include it in every request:
+
+```bash
+curl https://api.kolbo.ai/api/v1/models \
+  -H "X-API-Key: kolbo_live_abc123def456..."
+```
+
+## Managing Keys
+
+### List Keys
+
+```bash
+curl https://api.kolbo.ai/api/api-keys \
+  -H "Authorization: Bearer YOUR_JWT_TOKEN"
+```
+
+### Get Key Details
+
+```bash
+curl https://api.kolbo.ai/api/api-keys/KEY_ID \
+  -H "Authorization: Bearer YOUR_JWT_TOKEN"
+```
+
+### Revoke a Key
+
+```bash
+curl -X DELETE https://api.kolbo.ai/api/api-keys/KEY_ID \
+  -H "Authorization: Bearer YOUR_JWT_TOKEN"
+```
+
+## Limits
+
+- Maximum **5 active keys** per user
+- Keys expire after the configured duration (default: 365 days)
+- Permissions: `read` and `write` only (admin keys cannot be self-created)
+- Expiration range: 1-730 days
+
+## Security Best Practices
+
+- Store keys in environment variables, never in code
+- Use separate keys for different integrations
+- Revoke unused keys promptly
+- Monitor usage via the key details endpoint

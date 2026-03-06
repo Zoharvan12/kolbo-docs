@@ -23,7 +23,18 @@
       "Bash(findstr:*)",
       "Bash(taskkill:*)",
       "WebFetch(domain:fumadocs.dev)",
-      "Bash(npm install:*)"
+      "Bash(npm install:*)",
+      "Bash(timeout 5 bash -c \"while ! netstat -an | findstr '':3000.*LISTENING'' > /dev/null 2>&1; do sleep 1; done; echo ''Server is ready''\")",
+      "Bash(curl:*)",
+      "Bash(npx:*)",
+      "Bash(for dir in content/docs/chat-tools/*/)",
+      "Bash(for:*)",
+      "Bash(do mv \"$dir/index.mdx\" \"$dir.mdx\")",
+      "Bash(do if [ -d \"$dir\" ])",
+      "Bash([ -f \"$dir/index.mdx\" ])",
+      "Bash(then mv \"$dir/index.mdx\" \"$dir.mdx\")",
+      "Bash(fi)",
+      "Bash(cmd.exe //c \"taskkill /PID 720444 /F && taskkill /PID 571672 /F\")"
     ],
     "deny": [],
     "ask": []

@@ -1,0 +1,16 @@
+{
+  "title": "Developer API",
+  "icon": "Code",
+  "pages": [
+    "index",
+    "authentication",
+    "image-generation",
+    "video-generation",
+    "music-generation",
+    "speech-and-sound",
+    "models-and-pricing",
+    "credits-and-billing",
+    "errors-and-limits",
+    "claude-code-skill"
+  ]
+}

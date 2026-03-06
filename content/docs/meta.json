@@ -10,11 +10,11 @@
     "3d-tools",
     "apps",
     "media-library",
-    "workflows",
     "projects",
     "features",
     "guides",
     "account",
+    "developer-api",
     "help"
   ]
 }

@@ -1,0 +1,84 @@
+---
+title: Errors & Rate Limits
+description: Error handling and rate limiting for the Kolbo Developer API.
+---
+
+## Error Format
+
+All errors return a consistent JSON format:
+
+```json
+{
+  "success": false,
+  "error": "Human-readable error message",
+  "code": "ERROR_CODE"
+}
+```
+
+## HTTP Status Codes
+
+| Status | Meaning |
+|--------|---------|
+| 200 | Success |
+| 201 | Created (new API key) |
+| 400 | Bad request (missing/invalid params) |
+| 401 | Unauthorized (invalid or missing API key) |
+| 403 | Forbidden (insufficient permissions) |
+| 404 | Not found |
+| 429 | Rate limited |
+| 500 | Server error |
+
+## Common Error Codes
+
+| Code | Description |
+|------|-------------|
+| `INVALID_API_KEY` | API key is invalid, expired, or revoked |
+| `INSUFFICIENT_CREDITS` | Not enough credits for this generation |
+| `MISSING_FIELDS` | Required fields are missing |
+| `GENERATION_ERROR` | The generation failed to start |
+| `MODEL_NOT_FOUND` | The specified model doesn't exist |
+| `RATE_LIMITED` | Too many requests |
+
+## Rate Limits
+
+| Endpoint | Limit |
+|----------|-------|
+| Generation endpoints | 10 requests/minute per user |
+| Status polling | 300 requests/minute per IP |
+| Models / Credits | 300 requests/minute per IP |
+
+When rate limited, the response includes:
+
+```json
+{
+  "status": false,
+  "message": "Too many requests, please try again later"
+}
+```
+
+## Generation States
+
+When polling status, the `state` field can be:
+
+| State | Description |
+|-------|-------------|
+| `processing` | Generation is in progress |
+| `completed` | Generation finished, `result` field contains URLs |
+| `failed` | Generation failed, `error` field explains why |
+| `cancelled` | Generation was cancelled |
+
+## Handling Failures
+
+1. Check `state` in status response
+2. If `failed`, read the `error` field
+3. Credits are automatically refunded for failed generations
+4. You can retry with a new request
+
+## Timeouts
+
+- Image: typically completes within 30 seconds
+- Video: typically completes within 5 minutes
+- Music: typically completes within 2 minutes
+- Speech/Sound: typically completes within 30 seconds
+
+If polling beyond these times, the generation may have failed silently. Check the status one final time, then consider retrying.

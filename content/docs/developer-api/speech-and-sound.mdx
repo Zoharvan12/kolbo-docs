@@ -1,0 +1,101 @@
+---
+title: Speech & Sound
+description: Text-to-speech and sound effect generation with the Kolbo API.
+---
+
+Convert text to speech or generate sound effects using ElevenLabs and other providers.
+
+## Text to Speech
+
+### Endpoint
+
+```
+POST /api/v1/generate/speech
+```
+
+### Request Body
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `text` | string | Yes | Text to convert to speech |
+| `voice` | string | No | Voice ID or name (default: `"Rachel"`) |
+| `model` | string | No | TTS model (default: `"eleven_v3"`) |
+| `language` | string | No | Language code, e.g. `"en-US"`, `"he-IL"` (default: `"en-US"`) |
+
+### Example
+
+```bash
+curl -X POST https://api.kolbo.ai/api/v1/generate/speech \
+  -H "X-API-Key: kolbo_live_..." \
+  -H "Content-Type: application/json" \
+  -d '{
+    "text": "Welcome to Kolbo AI, the all-in-one creative platform.",
+    "voice": "Rachel",
+    "language": "en-US"
+  }'
+```
+
+### Completed Status
+
+```json
+{
+  "success": true,
+  "generation_id": "tts123",
+  "state": "completed",
+  "result": {
+    "urls": ["https://cdn.kolbo.ai/audio/..."],
+    "voice": "Rachel",
+    "duration": 4.5
+  }
+}
+```
+
+### Credits
+
+Speech credits are character-based: `ceil(text.length / 100) x model.credit`
+
+---
+
+## Sound Effects
+
+### Endpoint
+
+```
+POST /api/v1/generate/sound
+```
+
+### Request Body
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `prompt` | string | Yes | Description of the sound effect |
+| `duration` | number | No | Duration in seconds (omit for auto) |
+
+### Example
+
+```bash
+curl -X POST https://api.kolbo.ai/api/v1/generate/sound \
+  -H "X-API-Key: kolbo_live_..." \
+  -H "Content-Type: application/json" \
+  -d '{"prompt": "Thunder clap followed by heavy rain"}'
+```
+
+### Completed Status
+
+```json
+{
+  "success": true,
+  "generation_id": "snd123",
+  "state": "completed",
+  "result": {
+    "urls": ["https://cdn.kolbo.ai/audio/..."],
+    "duration": 8
+  }
+}
+```
+
+## Tips
+
+- Speech generation is fast (5-30 seconds)
+- Sound effects typically take 5-30 seconds
+- Both return audio URLs that can be downloaded or streamed

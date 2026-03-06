@@ -10,6 +10,9 @@ export default function Layout({ children }: LayoutProps<'/'>) {
       sidebar={{
         defaultOpenLevel: 0, // Only open active category
         collapsible: true,
+        prefetch: true, // Enable prefetching for instant navigation
+        banner: null, // Remove banner for cleaner UI
+        footer: null, // Remove footer for faster rendering
       }}
     >
       {children}
