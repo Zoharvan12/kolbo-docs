@@ -15,7 +15,7 @@ GET /api/v1/models
 
 | Parameter | Type | Description |
 |-----------|------|-------------|
-| `type` | string | Filter by SDK type: `image`, `video`, `video_from_image`, `music`, `speech`, `sound`. Also accepts raw model types like `text_to_img`. |
+| `type` | string | Filter by SDK type: `image`, `image_edit`, `video`, `video_from_image`, `music`, `speech`, `sound`. Also accepts raw model types like `text_to_img`, `image_editing`. |
 | `provider` | string | Filter by provider (e.g., `fal`, `kie`, `suno`, `elevenlabs`) |
 
 ### Example
@@ -70,9 +70,17 @@ curl "https://api.kolbo.ai/api/v1/models?type=video&provider=fal" \
 
 <LiveModels type="image" showAspectRatios />
 
-## Available Video Models
+## Available Image Editing Models
+
+<LiveModels type="image_edit" showAspectRatios />
+
+## Available Text-to-Video Models
 
 <LiveModels type="video" showDurations showAspectRatios />
+
+## Available Image-to-Video Models
+
+<LiveModels type="video_from_image" showDurations showAspectRatios />
 
 ## Available Music Models
 
@@ -95,6 +103,7 @@ Credits are the universal currency for all generations. 1 credit = $0.01.
 | Type | Pricing Model |
 |------|--------------|
 | Image | Flat rate per generation (typically 2-10 credits) |
+| Image Editing | Flat rate per generation (typically 2-10 credits) |
 | Video | Per-second: `model.credit x duration_seconds` |
 | Music | Flat rate per generation |
 | Speech | Per 100 characters: `ceil(chars / 100) x model.credit` |

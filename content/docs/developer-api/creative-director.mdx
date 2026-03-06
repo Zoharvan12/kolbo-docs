@@ -22,6 +22,10 @@ POST /api/v1/generate/creative-director
 | `model` | string | No | Model identifier for all scenes (default: auto-select) |
 | `aspect_ratio` | string | No | `"1:1"`, `"16:9"`, `"9:16"`, etc. (default: `"1:1"`) |
 | `visual_dna_ids` | array | No | Visual DNA IDs for character/product consistency |
+| `reference_images` | array | No | URLs of reference images for style/content guidance |
+| `workflow_type` | string | No | `"image"` or `"video"` (default: `"image"`) |
+| `duration` | number | No | Duration in seconds for video mode scenes |
+| `enhance_prompt` | boolean | No | Enhance prompt for better results (default: `true`) |
 
 ### Example
 
@@ -140,6 +144,41 @@ curl https://api.kolbo.ai/api/v1/generate/creative-director/cd123/status \
     }
   ]
 }
+```
+
+## Video Mode
+
+Generate coordinated video scenes instead of images by setting `workflow_type` to `"video"`:
+
+```bash
+curl -X POST https://api.kolbo.ai/api/v1/generate/creative-director \
+  -H "X-API-Key: kolbo_live_..." \
+  -H "Content-Type: application/json" \
+  -d '{
+    "prompt": "30-second sneaker commercial with dynamic angles",
+    "scene_count": 4,
+    "workflow_type": "video",
+    "duration": 5,
+    "aspect_ratio": "16:9"
+  }'
+```
+
+When using video mode, each completed scene returns `video_urls` instead of (or in addition to) `image_urls` in the status response.
+
+## With Reference Images
+
+Pass reference images to guide the style and content of generated scenes:
+
+```bash
+curl -X POST https://api.kolbo.ai/api/v1/generate/creative-director \
+  -H "X-API-Key: kolbo_live_..." \
+  -H "Content-Type: application/json" \
+  -d '{
+    "prompt": "Product showcase in various lifestyle settings",
+    "scene_count": 4,
+    "reference_images": ["https://example.com/product-front.jpg", "https://example.com/product-side.jpg"],
+    "aspect_ratio": "1:1"
+  }'
 ```
 
 ## With Visual DNA

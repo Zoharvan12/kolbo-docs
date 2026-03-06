@@ -23,6 +23,7 @@ POST /api/v1/generate/video
 | `duration` | number | No | Duration in seconds, e.g. `5` or `10` (default: `5`) |
 | `enhance_prompt` | boolean | No | Enhance prompt (default: `true`) |
 | `visual_dna_ids` | array | No | [Visual DNA](/docs/developer-api/visual-dna) IDs for character/product consistency (max 3) |
+| `reference_images` | array | No | URLs of reference images for style/content guidance |
 
 ### Example
 
@@ -54,8 +55,10 @@ POST /api/v1/generate/video/from-image
 | `image_url` | string | Yes | URL of the source image |
 | `prompt` | string | No | Motion/animation description |
 | `model` | string | No | Model identifier (default: auto-select) |
+| `aspect_ratio` | string | No | `"16:9"`, `"9:16"`, `"1:1"` (default: `"16:9"`) |
 | `duration` | number | No | Duration in seconds (default: `5`) |
 | `enhance_prompt` | boolean | No | Enhance prompt (default: `true`) |
+| `visual_dna_ids` | array | No | [Visual DNA](/docs/developer-api/visual-dna) IDs for consistency (max 3) |
 
 ### Example
 
@@ -105,6 +108,7 @@ Both endpoints return the same format:
 ## Tips
 
 - Video generation takes 1-5 minutes depending on the model and duration
-- Check `supported_durations` on each model via the [Models endpoint](/docs/developer-api/models-and-pricing)
+- Check `supported_durations` and `supported_aspect_ratios` on each model via the [Models endpoint](/docs/developer-api/models-and-pricing) before requesting specific values
 - Credits are charged per second: `model.credit x duration`
 - Use `poll_interval_hint` from the initial response to set your polling interval
+- Not all models support all durations or aspect ratios — if unsupported, the API may select the closest match

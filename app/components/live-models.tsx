@@ -9,7 +9,9 @@ const CACHE_TTL = 60 * 60 * 1000; // 1 hour
 // SDK type → backend endpoint mapping
 const TYPE_ENDPOINTS: Record<string, string> = {
   image: '/image-models',
+  image_edit: '/image-models',
   video: '/models/video?generationType=all',
+  video_from_image: '/models/video?generationType=all',
   music: '/music-models',
   speech: '/txt-Speech',
   sound: '/txt-Speech', // sound models are in the same endpoint
@@ -18,7 +20,9 @@ const TYPE_ENDPOINTS: Record<string, string> = {
 // SDK type → model type filter
 const SDK_TYPE_FILTER: Record<string, string[]> = {
   image: ['text_to_img'],
+  image_edit: ['image_editing'],
   video: ['text_to_video', 'img_to_video'],
+  video_from_image: ['img_to_video'],
   music: ['music_gen', 'music_generator'],
   speech: ['text_to_speech'],
   sound: ['text_to_sound'],
@@ -187,7 +191,7 @@ export function LiveModels({ type, showDurations, showAspectRatios }: {
                 {m.newModel && <span style={{ marginLeft: 6, fontSize: 11, background: '#10b981', color: 'white', padding: '1px 6px', borderRadius: 4 }}>new</span>}
               </td>
               <td style={{ padding: '8px 12px' }}>
-                <code style={{ fontSize: 12, background: 'var(--fd-muted, #f4f4f5)', padding: '2px 6px', borderRadius: 4 }}>{m.identifier}</code>
+                <code style={{ fontSize: 12, padding: '2px 6px', borderRadius: 4, border: '1px solid var(--fd-border, #e4e4e7)', color: 'var(--fd-foreground, #18181b)' }}>{m.identifier}</code>
               </td>
               <td style={{ padding: '8px 12px', color: 'var(--fd-muted-foreground, #71717a)' }}>{m.provider}</td>
               <td style={{ padding: '8px 12px', textAlign: 'right', fontFamily: 'monospace' }}>

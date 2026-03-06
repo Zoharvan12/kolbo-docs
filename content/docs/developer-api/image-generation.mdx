@@ -19,7 +19,8 @@ POST /api/v1/generate/image
 | `model` | string | No | Model identifier (default: auto-select) |
 | `aspect_ratio` | string | No | `"1:1"`, `"16:9"`, `"9:16"`, etc. (default: `"1:1"`) |
 | `enhance_prompt` | boolean | No | Enhance prompt for better results (default: `true`) |
-| `reference_images` | array | No | Reference image URLs for style/content guidance |
+| `num_images` | number | No | Number of images to generate (default: `1`) |
+| `reference_images` | array | No | Array of image URLs used as style/content reference. The model uses these to guide composition, style, or subject. Check `max_reference_images` on the model. |
 | `visual_dna_ids` | array | No | [Visual DNA](/docs/developer-api/visual-dna) IDs for character/product consistency (max 3) |
 
 ## Examples
@@ -44,6 +45,19 @@ curl -X POST https://api.kolbo.ai/api/v1/generate/image \
     "model": "fal-ai/flux/schnell",
     "aspect_ratio": "16:9",
     "enhance_prompt": false
+  }'
+```
+
+### With Reference Images
+
+```bash
+curl -X POST https://api.kolbo.ai/api/v1/generate/image \
+  -H "X-API-Key: kolbo_live_..." \
+  -H "Content-Type: application/json" \
+  -d '{
+    "prompt": "A portrait in the same style as the reference",
+    "reference_images": ["https://example.com/style-ref.jpg"],
+    "aspect_ratio": "1:1"
   }'
 ```
 

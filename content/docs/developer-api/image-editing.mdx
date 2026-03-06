@@ -1,0 +1,162 @@
+---
+title: Image Editing
+description: Edit and transform images using AI models via the Kolbo API.
+---
+
+Edit images using AI — remove backgrounds, change colors, apply style transfers, and more. Provide source images as URLs along with a text prompt describing the desired edit.
+
+## Endpoint
+
+```
+POST /api/v1/generate/image-edit
+```
+
+## Request Body
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `prompt` | string | Yes | Description of the edit to apply |
+| `model` | string | No | Model identifier (default: auto-select) |
+| `source_images` | array | No | URLs of images to edit. Omit for text-only generation with editing models. |
+| `aspect_ratio` | string | No | `"1:1"`, `"16:9"`, `"9:16"`, etc. (default: `"1:1"`) |
+| `num_images` | number | No | Number of output images (default: `1`) |
+| `enhance_prompt` | boolean | No | Enhance prompt for better results (default: `true`) |
+| `visual_dna_ids` | array | No | [Visual DNA](/docs/developer-api/visual-dna) IDs for style consistency (max 3) |
+
+## Examples
+
+### Basic Edit
+
+```bash
+curl -X POST https://api.kolbo.ai/api/v1/generate/image-edit \
+  -H "X-API-Key: kolbo_live_..." \
+  -H "Content-Type: application/json" \
+  -d '{
+    "prompt": "Remove the background and place on a clean white surface",
+    "source_images": ["https://example.com/product-photo.jpg"]
+  }'
+```
+
+### Style Transfer
+
+```bash
+curl -X POST https://api.kolbo.ai/api/v1/generate/image-edit \
+  -H "X-API-Key: kolbo_live_..." \
+  -H "Content-Type: application/json" \
+  -d '{
+    "prompt": "Transform into a watercolor painting style",
+    "source_images": ["https://example.com/photo.jpg"],
+    "model": "fal-ai/flux/schnell",
+    "enhance_prompt": false
+  }'
+```
+
+### JavaScript
+
+```javascript
+const response = await fetch('https://api.kolbo.ai/api/v1/generate/image-edit', {
+  method: 'POST',
+  headers: {
+    'X-API-Key': process.env.KOLBO_API_KEY,
+    'Content-Type': 'application/json'
+  },
+  body: JSON.stringify({
+    prompt: 'Change the car color to red',
+    source_images: ['https://example.com/car.jpg'],
+    aspect_ratio: '16:9'
+  })
+});
+
+const { generation_id, poll_url } = await response.json();
+
+// Poll for result
+let result;
+do {
+  await new Promise(r => setTimeout(r, 3000));
+  const status = await fetch(`https://api.kolbo.ai/api${poll_url}`, {
+    headers: { 'X-API-Key': process.env.KOLBO_API_KEY }
+  });
+  result = await status.json();
+} while (result.state === 'processing');
+
+console.log('Edited image URLs:', result.result.urls);
+```
+
+### Python
+
+```python
+import requests
+import time
+
+API_KEY = "kolbo_live_..."
+BASE = "https://api.kolbo.ai/api"
+
+# Start edit
+r = requests.post(f"{BASE}/v1/generate/image-edit",
+    headers={"X-API-Key": API_KEY},
+    json={
+        "prompt": "Remove background and add soft shadow",
+        "source_images": ["https://example.com/product.jpg"]
+    })
+gen = r.json()
+
+# Poll for result
+while True:
+    time.sleep(3)
+    s = requests.get(f"{BASE}{gen['poll_url']}",
+        headers={"X-API-Key": API_KEY}).json()
+    if s["state"] != "processing":
+        break
+
+print("URLs:", s["result"]["urls"])
+```
+
+## Response
+
+### Generation Started
+
+```json
+{
+  "success": true,
+  "generation_id": "edit123",
+  "type": "image_edit",
+  "model": "auto",
+  "credits_charged": 3,
+  "poll_url": "/api/v1/generate/edit123/status",
+  "poll_interval_hint": 3
+}
+```
+
+### Completed Status
+
+```json
+{
+  "success": true,
+  "generation_id": "edit123",
+  "type": "image_edit",
+  "state": "completed",
+  "progress": 100,
+  "result": {
+    "urls": ["https://cdn.kolbo.ai/images/..."],
+    "model": "fal-ai/flux/schnell",
+    "prompt_used": "Enhanced version of your prompt",
+    "created_at": "2026-03-05T10:30:00Z"
+  }
+}
+```
+
+## Finding Models
+
+Use the [Models endpoint](/docs/developer-api/models-and-pricing) to discover available image editing models:
+
+```bash
+curl "https://api.kolbo.ai/api/v1/models?type=image_edit" \
+  -H "X-API-Key: kolbo_live_..."
+```
+
+## Tips
+
+- `source_images` accepts URLs — no file uploads needed. The API downloads and processes them.
+- You can omit `source_images` to use editing models for text-only generation with editing-specific styles.
+- Combine with Visual DNA for consistent style across multiple edits.
+- Image editing typically takes 5-15 seconds depending on the model.
