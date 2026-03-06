@@ -35,15 +35,33 @@ curl -X POST https://api.kolbo.ai/api/v1/generate/speech \
   }'
 ```
 
-### Completed Status
+### Response
+
+#### Generation Started
+
+```json
+{
+  "success": true,
+  "generation_id": "tts123",
+  "type": "speech",
+  "model": "eleven_v3",
+  "credits_charged": 2,
+  "poll_url": "/api/v1/generate/tts123/status",
+  "poll_interval_hint": 3
+}
+```
+
+#### Completed Status
 
 ```json
 {
   "success": true,
   "generation_id": "tts123",
   "state": "completed",
+  "progress": 100,
   "result": {
     "urls": ["https://cdn.kolbo.ai/audio/..."],
+    "model": "eleven_v3",
     "voice": "Rachel",
     "duration": 4.5
   }
@@ -53,6 +71,8 @@ curl -X POST https://api.kolbo.ai/api/v1/generate/speech \
 ### Credits
 
 Speech credits are character-based: `ceil(text.length / 100) x model.credit`
+
+For example, a 250-character text with a model that costs 1 credit per 100 chars: `ceil(250 / 100) x 1 = 3 credits`.
 
 ---
 
@@ -80,15 +100,33 @@ curl -X POST https://api.kolbo.ai/api/v1/generate/sound \
   -d '{"prompt": "Thunder clap followed by heavy rain"}'
 ```
 
-### Completed Status
+### Response
+
+#### Generation Started
+
+```json
+{
+  "success": true,
+  "generation_id": "snd123",
+  "type": "sound",
+  "model": "auto",
+  "credits_charged": 5,
+  "poll_url": "/api/v1/generate/snd123/status",
+  "poll_interval_hint": 5
+}
+```
+
+#### Completed Status
 
 ```json
 {
   "success": true,
   "generation_id": "snd123",
   "state": "completed",
+  "progress": 100,
   "result": {
     "urls": ["https://cdn.kolbo.ai/audio/..."],
+    "model": "elevenlabs-sound",
     "duration": 8
   }
 }

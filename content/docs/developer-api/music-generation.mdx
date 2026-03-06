@@ -63,11 +63,15 @@ curl -X POST https://api.kolbo.ai/api/v1/generate/music \
 
 ## Response
 
+### Generation Started
+
 ```json
 {
   "success": true,
   "generation_id": "mus123",
   "type": "music",
+  "model": "chirp-v4",
+  "credits_charged": 10,
   "poll_url": "/api/v1/generate/mus123/status",
   "poll_interval_hint": 8
 }
@@ -83,11 +87,71 @@ curl -X POST https://api.kolbo.ai/api/v1/generate/music \
   "progress": 100,
   "result": {
     "urls": ["https://cdn.kolbo.ai/audio/..."],
+    "model": "chirp-v4",
     "title": "Summer Vibes",
     "duration": 120,
     "lyrics": "Generated or provided lyrics..."
   }
 }
+```
+
+## JavaScript Example
+
+```javascript
+const response = await fetch('https://api.kolbo.ai/api/v1/generate/music', {
+  method: 'POST',
+  headers: {
+    'X-API-Key': process.env.KOLBO_API_KEY,
+    'Content-Type': 'application/json'
+  },
+  body: JSON.stringify({
+    prompt: 'Upbeat pop song about summer adventures',
+    style: 'pop',
+    instrumental: false
+  })
+});
+
+const { generation_id, poll_url } = await response.json();
+
+// Poll for result
+let result;
+do {
+  await new Promise(r => setTimeout(r, 8000));
+  const status = await fetch(`https://api.kolbo.ai/api${poll_url}`, {
+    headers: { 'X-API-Key': process.env.KOLBO_API_KEY }
+  });
+  result = await status.json();
+} while (result.state === 'processing');
+
+console.log('Music URLs:', result.result.urls);
+```
+
+## Python Example
+
+```python
+import requests
+import time
+
+API_KEY = "kolbo_live_..."
+BASE = "https://api.kolbo.ai/api"
+
+r = requests.post(f"{BASE}/v1/generate/music",
+    headers={"X-API-Key": API_KEY},
+    json={
+        "prompt": "Cinematic orchestral theme",
+        "instrumental": True,
+        "style": "cinematic"
+    })
+gen = r.json()
+
+while True:
+    time.sleep(8)
+    s = requests.get(f"{BASE}{gen['poll_url']}",
+        headers={"X-API-Key": API_KEY}).json()
+    if s["state"] != "processing":
+        break
+
+print("URLs:", s["result"]["urls"])
 ```
 
 ## Tips

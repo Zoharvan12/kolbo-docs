@@ -2,7 +2,8 @@
 
 import { useEffect, useState } from 'react';
 
-const API_BASE = 'https://api.kolbo.ai/api';
+const API_BASE = process.env.NEXT_PUBLIC_API_BASE || 'https://api.kolbo.ai/api';
+const ASSETS_BASE = process.env.NEXT_PUBLIC_ASSETS_BASE || 'https://api.kolbo.ai/assets';
 const CACHE_KEY = 'kolbo_docs_models';
 const CACHE_TTL = 60 * 60 * 1000; // 1 hour
 
@@ -38,6 +39,16 @@ interface ModelItem {
   newModel?: boolean;
   supportedAspectRatios?: string[];
   supportedDurations?: number[];
+  avatar?: string;
+}
+
+/** Resolve avatar field to a full URL */
+function resolveAvatarUrl(avatar?: string): string | null {
+  if (!avatar) return null;
+  if (avatar.startsWith('http')) return avatar;
+  // Strip @assets/ prefix if present
+  const filename = avatar.replace(/^@assets\//, '');
+  return `${ASSETS_BASE}/${filename}`;
 }
 
 function getCached(sdkType: string): ModelItem[] | null {
@@ -115,6 +126,7 @@ async function fetchModels(sdkType: string): Promise<ModelItem[]> {
         newModel: m.newModel,
         supportedAspectRatios: m.supportedAspectRatios,
         supportedDurations: m.supportedDurations,
+        avatar: m.avatar || m.imageUrl,
       });
     }
 
@@ -183,32 +195,49 @@ export function LiveModels({ type, showDurations, showAspectRatios }: {
           </tr>
         </thead>
         <tbody>
-          {models.map((m) => (
-            <tr key={m.identifier} style={{ borderBottom: '1px solid var(--fd-border, #e4e4e7)' }}>
-              <td style={{ padding: '8px 12px' }}>
-                {m.name}
-                {m.recommended && <span style={{ marginLeft: 6, fontSize: 11, background: 'var(--fd-primary, #2563eb)', color: 'white', padding: '1px 6px', borderRadius: 4 }}>recommended</span>}
-                {m.newModel && <span style={{ marginLeft: 6, fontSize: 11, background: '#10b981', color: 'white', padding: '1px 6px', borderRadius: 4 }}>new</span>}
-              </td>
-              <td style={{ padding: '8px 12px' }}>
-                <code style={{ fontSize: 12, padding: '2px 6px', borderRadius: 4, border: '1px solid var(--fd-border, #e4e4e7)', color: 'var(--fd-foreground, #18181b)' }}>{m.identifier}</code>
-              </td>
-              <td style={{ padding: '8px 12px', color: 'var(--fd-muted-foreground, #71717a)' }}>{m.provider}</td>
-              <td style={{ padding: '8px 12px', textAlign: 'right', fontFamily: 'monospace' }}>
-                {m.credit}{type === 'video' ? '/sec' : ''}
-              </td>
-              {showDurations && (
-                <td style={{ padding: '8px 12px', color: 'var(--fd-muted-foreground)', fontSize: 13 }}>
-                  {m.supportedDurations?.join(', ') || '—'}s
+          {models.map((m) => {
+            const avatarUrl = resolveAvatarUrl(m.avatar);
+            return (
+              <tr key={m.identifier} style={{ borderBottom: '1px solid var(--fd-border, #e4e4e7)' }}>
+                <td style={{ padding: '8px 12px' }}>
+                  <span style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                    {avatarUrl && (
+                      <img
+                        src={avatarUrl}
+                        alt=""
+                        width={20}
+                        height={20}
+                        style={{ borderRadius: 4, flexShrink: 0 }}
+                        onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
+                      />
+                    )}
+                    <span>
+                      {m.name}
+                      {m.recommended && <span style={{ marginLeft: 6, fontSize: 11, background: 'var(--fd-primary, #2563eb)', color: 'white', padding: '1px 6px', borderRadius: 4 }}>recommended</span>}
+                      {m.newModel && <span style={{ marginLeft: 6, fontSize: 11, background: '#10b981', color: 'white', padding: '1px 6px', borderRadius: 4 }}>new</span>}
+                    </span>
+                  </span>
                 </td>
-              )}
-              {showAspectRatios && (
-                <td style={{ padding: '8px 12px', color: 'var(--fd-muted-foreground)', fontSize: 13 }}>
-                  {m.supportedAspectRatios?.join(', ') || '—'}
+                <td style={{ padding: '8px 12px' }}>
+                  <code style={{ fontSize: 12, padding: '2px 6px', borderRadius: 4, background: 'none', border: 'none', color: '#fff', whiteSpace: 'nowrap' }}>{m.identifier}</code>
                 </td>
-              )}
-            </tr>
-          ))}
+                <td style={{ padding: '8px 12px', color: 'var(--fd-muted-foreground, #71717a)' }}>{m.provider}</td>
+                <td style={{ padding: '8px 12px', textAlign: 'right', fontFamily: 'monospace' }}>
+                  {m.credit}{(type === 'video' || type === 'video_from_image') ? '/sec' : ''}
+                </td>
+                {showDurations && (
+                  <td style={{ padding: '8px 12px', color: 'var(--fd-muted-foreground)', fontSize: 13 }}>
+                    {m.supportedDurations?.join(', ') || '—'}s
+                  </td>
+                )}
+                {showAspectRatios && (
+                  <td style={{ padding: '8px 12px', color: 'var(--fd-muted-foreground)', fontSize: 13 }}>
+                    {m.supportedAspectRatios?.join(', ') || '—'}
+                  </td>
+                )}
+              </tr>
+            );
+          })}
         </tbody>
       </table>
     </div>
