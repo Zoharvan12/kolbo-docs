@@ -3,7 +3,7 @@ title: Models & Pricing
 description: Discover available AI models and their credit costs.
 ---
 
-Kolbo provides 100+ AI models that are dynamically available. New models are added regularly and immediately accessible via the API.
+Kolbo provides <LiveModelCount />+ AI models that are dynamically available. New models are added regularly and immediately accessible via the API.
 
 ## List Models
 
@@ -66,6 +66,26 @@ curl "https://api.kolbo.ai/api/v1/models?type=video&provider=fal" \
 | `recommended` | Kolbo-recommended model |
 | `new_model` | Recently added model |
 
+## Available Image Models
+
+<LiveModels type="image" showAspectRatios />
+
+## Available Video Models
+
+<LiveModels type="video" showDurations showAspectRatios />
+
+## Available Music Models
+
+<LiveModels type="music" />
+
+## Available Speech Models
+
+<LiveModels type="speech" />
+
+## Available Sound Models
+
+<LiveModels type="sound" />
+
 ## Credit Costs
 
 Credits are the universal currency for all generations. 1 credit = $0.01.
@@ -80,18 +100,7 @@ Credits are the universal currency for all generations. 1 credit = $0.01.
 | Speech | Per 100 characters: `ceil(chars / 100) x model.credit` |
 | Sound | Flat rate per generation |
 
-### Example Costs
-
-| Generation | Credits |
-|------------|---------|
-| Flux Schnell image | ~2 |
-| 5s Seedance video | ~25 |
-| 10s Kling video | ~50 |
-| Suno music track | ~10 |
-| 500-char speech | ~5 |
-| Sound effect | ~3 |
-
-*Exact costs vary by model. Check the `credit` field on each model.*
+*Exact costs are shown in the live tables above. The `credit` field on each model is always up to date.*
 
 ## Auto-Selection
 

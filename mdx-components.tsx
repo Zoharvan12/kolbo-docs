@@ -2,6 +2,7 @@ import defaultMdxComponents from 'fumadocs-ui/mdx';
 import type { MDXComponents } from 'mdx/types';
 import { icons, HelpCircle } from 'lucide-react';
 import { createElement, type ReactNode } from 'react';
+import { LiveModels, LiveModelCount } from './app/components/live-models';
 
 // Custom Card component with icon support
 function CardWithIcon({
@@ -77,6 +78,8 @@ export function getMDXComponents(components?: MDXComponents): MDXComponents {
   return {
     ...defaultMdxComponents,
     Card: CardWithIcon,
+    LiveModels,
+    LiveModelCount,
     ...components,
   };
 }

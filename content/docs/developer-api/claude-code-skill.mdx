@@ -100,15 +100,24 @@ You have access to the Kolbo AI platform via MCP tools for generating images, vi
 
 ## Recommended Workflow
 1. Check credits with `check_credits` before generating
-2. Use `list_models` with a type filter to find the best model
-3. Generate content with the appropriate tool
+2. **ALWAYS use `list_models` with a type filter to discover current models** — models change frequently, never hardcode model identifiers
+3. Generate content with the appropriate tool and a model identifier from step 2
 4. The tool handles polling — it returns the final URL when ready
+5. If you omit the `model` parameter, Kolbo auto-selects the best model (recommended for most cases)
+
+## Important: Dynamic Model Discovery
+- **Never hardcode model names** — models are added/removed/updated regularly
+- **Always call `list_models`** to get current identifiers, credit costs, and capabilities
+- Use `list_models` with type filters: `image`, `video`, `video_from_image`, `music`, `speech`, `sound`
+- The `identifier` field from `list_models` is what you pass as the `model` parameter
+- Check `credit` field to estimate cost before generating
 
 ## Tips
 - Use `enhance_prompt: true` (default) for better image results
-- For video, check `supported_durations` and `supported_aspect_ratios` on the model
+- For video, check `supported_durations` and `supported_aspect_ratios` on the model from `list_models`
 - Music supports `style`, `instrumental`, and `lyrics` parameters
 - Image generation is fastest (~10-30s), video is slowest (~1-5 min)
+- Models marked `recommended: true` are Kolbo's top picks for quality/speed
 ````
 
 ## Troubleshooting
