@@ -5,6 +5,70 @@ description: Text-to-speech and sound effect generation with the Kolbo API.
 
 Convert text to speech or generate sound effects using ElevenLabs and other providers.
 
+## List Voices
+
+Discover available voices before generating speech. Returns both platform preset voices and your custom cloned/designed voices.
+
+### Endpoint
+
+```
+GET /api/v1/voices
+```
+
+### Query Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `provider` | string | Filter by provider (e.g., `"elevenLabs"`, `"google"`) |
+| `language` | string | Filter by language name or code (e.g., `"English"`, `"en-US"`) |
+| `gender` | string | Filter by gender (e.g., `"Female"`, `"Male"`) |
+
+### Example
+
+```bash
+curl https://api.kolbo.ai/api/v1/voices?gender=Female \
+  -H "X-API-Key: kolbo_live_..."
+```
+
+### Response
+
+```json
+{
+  "success": true,
+  "voices": [
+    {
+      "voice_id": "EXAVITQu4vr4xnSDxMaL",
+      "name": "Rachel",
+      "provider": "elevenLabs",
+      "language": "English",
+      "language_code": "en-US",
+      "gender": "Female",
+      "accent": "American",
+      "preview_url": "https://...",
+      "styles": ["conversational", "calm"],
+      "custom": false
+    },
+    {
+      "voice_id": "custom_abc123",
+      "name": "My Cloned Voice",
+      "provider": "elevenlabs",
+      "language": "auto",
+      "language_code": null,
+      "gender": null,
+      "accent": null,
+      "preview_url": null,
+      "styles": [],
+      "custom": true
+    }
+  ],
+  "count": 152
+}
+```
+
+Use the `voice_id` from this response as the `voice` parameter in the speech endpoint. You can also pass a voice **name** (e.g., `"Rachel"`) and the API will resolve it automatically.
+
+---
+
 ## Text to Speech
 
 ### Endpoint
