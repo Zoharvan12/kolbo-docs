@@ -4,6 +4,7 @@
   "pages": [
     "index",
     "authentication",
+    "chat",
     "image-generation",
     "video-generation",
     "music-generation",

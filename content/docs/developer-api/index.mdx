@@ -66,6 +66,7 @@ When complete:
 
 | Type | Endpoint | Typical Time |
 |------|----------|-------------|
+| Chat | `POST /v1/chat` | 2-30s |
 | Image | `POST /v1/generate/image` | 10-30s |
 | Video (text) | `POST /v1/generate/video` | 1-5 min |
 | Video (from image) | `POST /v1/generate/video/from-image` | 1-5 min |
@@ -86,6 +87,19 @@ Create reusable visual identities for characters, products, or styles, then atta
 | `DELETE /v1/visual-dna/:id` | Delete a Visual DNA |
 
 See [Visual DNA](/docs/developer-api/visual-dna) for details.
+
+## Chat
+
+Send messages to 20+ AI models with multi-turn conversation support.
+
+| Endpoint | Description |
+|----------|-------------|
+| `POST /v1/chat` | Stateless chat completion (synchronous) |
+| `POST /v1/chat/conversations` | Session-based chat message (requires polling) |
+| `GET /v1/chat/conversations` | List your conversations |
+| `GET /v1/chat/conversations/:id/messages` | Get conversation messages |
+
+See [Chat](/docs/developer-api/chat) for details.
 
 ## Other Endpoints
 

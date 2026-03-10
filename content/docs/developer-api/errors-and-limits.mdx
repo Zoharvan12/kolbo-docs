@@ -77,6 +77,8 @@ When polling status, the `state` field can be:
 
 ## Timeouts
 
+- Chat (stateless `POST /v1/chat`): synchronous response, typically 2-30 seconds
+- Chat (session-based `POST /v1/chat/conversations`): requires polling, typically 5-30 seconds
 - Image: typically completes within 30 seconds
 - Video: typically completes within 5 minutes
 - Music: typically completes within 2 minutes
